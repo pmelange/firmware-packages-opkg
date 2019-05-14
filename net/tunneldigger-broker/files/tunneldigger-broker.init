@@ -60,20 +60,13 @@ handle_tunneldigger_broker() {
 	}
 
 			
-	OPTIONS="max_cookies max_tunnels port_base tunnel_id_base tunnel_timeout namespace connection_rate_limit"
+	OPTIONS="max_cookies max_tunnels pmtu port_base tunnel_id_base tunnel_timeout namespace connection_rate_limit"
 	for option in ${OPTIONS}; do
 		cfg_append_option "$cfg" "${option}" "${option}"
 	done
 
 	config_get port "$cfg" port
 	cfg_append_kv "port" "${port// /,}"
-
-	config_get_bool pmtu_discovery "$cfg" pmtu_discovery 1
-	if [ "${pmtu_discovery}" -eq 1 ]; then
-		cfg_append_kv "pmtu_discovery" "true"
-	else
-		cfg_append_kv "pmtu_discovery" "false"
-	fi
 
 	cfg_append_section hooks
 	cfg_append_kv "session.up" "${HOOKPATH}/setup"
